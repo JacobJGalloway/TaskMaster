@@ -64,7 +64,7 @@ Using "create a task" as the representative example:
 
 Reads (e.g. `GET /users/{id}/tasks`) run the same layers in reverse: repository runs a `SELECT`, scans rows into `[]model.StudyTask`, and the handler `json.Encode`s that slice straight into the HTTP response body — so the database row shape and the JSON wire shape are the same struct, by design, for simplicity.
 
-## Local dependencies worth knowing for Round 2
+## Local dependencies worth knowing for future reviews
 
 - **`modernc.org/sqlite`** — a pure-Go, CGo-free SQLite driver. This is why there's no "install SQLite" step for local dev: Go itself can read/write the `.sqlite` file.
 - **No ORM** — all SQL is hand-written in the repository layer. Worth being able to explain the tradeoff (more control/clarity at this scale vs. more boilerplate as it grows).

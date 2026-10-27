@@ -20,7 +20,7 @@ src/
   main.ts                        - app bootstrap: creates the Vue app, installs Pinia + router, mounts to #app
 ```
 
-**Composables over a central store.** Despite Pinia being installed, state here is managed with two small "composables" (`useUsers`, `useTasks`) — plain functions that return reactive `ref`s and the functions that mutate them. Each call site that invokes `useUsers()`/`useTasks()` gets its *own* independent reactive state; nothing is shared globally. That's a deliberate scope decision for an app this size (one user list, one task list, no cross-component sharing need) rather than an oversight — worth being able to explain/contrast with "when would I reach for Pinia instead."
+**Composables over a central store.** Despite Pinia being installed, state here is managed with two small "composables" (`useUsers`, `useTasks`) — plain functions that return reactive `ref`s and the functions that mutate them. Each call site that invokes `useUsers()`/`useTasks()` gets its *own* independent reactive state; nothing is shared globally. That's a deliberate scope decision for an app this size (one user list, one task list, no cross-component sharing need).
 
 **Component responsibilities:**
 - `UserPicker.vue` — on mount, calls `fetchUsers()` and renders the result in a `<select>`. Also has an inline "add user" form. Communicates the selected user ID *up* to `App.vue` via `defineModel` (Vue's two-way-binding macro — equivalent to emitting `update:selectedUserId`).
@@ -38,7 +38,7 @@ This is the core pattern repeated across both composables, using `useTasks.ts` /
 5. **Re-render.** Because `TaskList.vue`'s `<template>` does `v-for="task in tasks"`, and `tasks` is the same `ref` returned by `useTasks()`, Vue automatically re-renders the `<ul>` with the new data — no manual DOM manipulation, no explicit "setState" call.
 6. **Error/loading state** follow the same shape: `error` and `isLoading` are refs too, set in `catch`/`finally` blocks, available for the template to branch on (e.g. to show a spinner or message) — though the current templates don't yet visibly use `error`/`isLoading`, which is a reasonable thing to be asked to add.
 
-Writes (`createTask`, `completeTask`, `createUser`) follow the same shape in reverse, then **re-fetch** the list (`await fetchTasks(userId)` at the end of `createTask`/`completeTask`) rather than optimistically patching local state — i.e. the UI's source of truth after any mutation is always "ask the server again," not "assume the mutation succeeded and update the array locally." Worth having a view on that tradeoff (simplicity/correctness vs. an extra round trip) for Round 2.
+Writes (`createTask`, `completeTask`, `createUser`) follow the same shape in reverse, then **re-fetch** the list (`await fetchTasks(userId)` at the end of `createTask`/`completeTask`) rather than optimistically patching local state — i.e. the UI's source of truth after any mutation is always "ask the server again," not "assume the mutation succeeded and update the array locally." Worth having a view on that tradeoff (simplicity/correctness vs. an extra round trip) for future reviews.
 
 ## Request specifics worth knowing
 
