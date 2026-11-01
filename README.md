@@ -97,3 +97,13 @@ If you'd rather use VS Code instead of standalone terminal windows:
 4. Both terminals keep running side by side as separate tabs — closing one does not stop the other.
 
 Once both are running, the web app in your browser will make requests to the API in the background, and you should be able to add a user, add tasks, and mark them complete.
+
+## Backlog of Next Steps for full MVP functionality
+
+Listed in priority order for what's next — not an exhaustive wishlist, and not a sign these were overlooked. Each item below was a deliberate scope cut to keep the demo focused; see [`CLAUDE.md`](./CLAUDE.md) for more on why.
+
+- [ ] **Backend-driven validation** — task duration and time-window rules are currently trusted to the frontend form; add validation at the service layer so the API doesn't depend on a well-behaved client.
+- [ ] **Authentication** — no login/session layer today; any client can call any endpoint. Worth a view on JWT vs. session-based auth before this goes beyond a demo.
+- [ ] **Configurable API base URL** — the frontend hardcodes `http://localhost:8080`; move to a `.env`-driven value so pointing at another environment doesn't require a code change.
+- [ ] **Typed, specific error responses** — handlers currently return generic `400`/`500`s; move toward typed error codes the frontend can branch on.
+- [ ] **Task editing** — tasks can be created and marked complete, but not edited; add an update path once the above groundwork is in place.
